@@ -1,0 +1,135 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "multilingual-communication-assistant"
+version = "0.1.0"
+description = "Open-source AI-assisted plain-language rewriting, translation and verification for family communication."
+readme = "../README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Aquib2004" }]
+keywords = ["translation", "plain-language", "verification", "accessibility", "i18n"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Framework :: FastAPI",
+  "Intended Audience :: Education",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Text Processing :: Linguistic",
+]
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.34",
+  "pydantic>=2.10",
+  "pydantic-settings>=2.7",
+  "SQLAlchemy>=2.0.36",
+  "alembic>=1.14",
+  "psycopg[binary]>=3.2",
+  "aiosqlite>=0.20",
+  "httpx>=0.28",
+  "structlog>=24.4",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3",
+  "pytest-asyncio>=0.25",
+  "pytest-cov>=6.0",
+  "ruff>=0.8",
+  "black>=24.10",
+  "mypy>=1.14",
+]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+# --- Pytest -------------------------------------------------------------------
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q --strict-markers --disable-warnings"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+filterwarnings = ["error::DeprecationWarning:app.*"]
+
+# --- Coverage ----------------------------------------------------------------
+[tool.coverage.run]
+source = ["app"]
+branch = true
+omit = ["*/migrations/*", "*/__init__.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_lines = [
+  "pragma: no cover",
+  "if TYPE_CHECKING:",
+  "raise NotImplementedError",
+  "@abstractmethod",
+]
+
+# --- Ruff --------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["app", "tests"]
+exclude = [".venv", "alembic/versions"]
+
+[tool.ruff.lint]
+select = [
+  "E",    # pycodestyle errors
+  "W",    # pycodestyle warnings
+  "F",    # pyflakes
+  "I",    # isort
+  "B",    # bugbear
+  "C4",   # comprehensions
+  "UP",   # pyupgrade
+  "SIM",  # simplify
+  "ANN",  # annotations
+  "D",    # pydocstyle
+  "RUF",
+]
+ignore = [
+  "D203",   # incompatible with D211
+  "D213",   # incompatible with D212
+  "ANN401", # allow Any where genuinely dynamic (AI payloads)
+  "B008",   # FastAPI Depends() in defaults is idiomatic
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D100", "D101", "D102", "D103", "D104", "ANN001", "ANN201"]
+"app/api/routes/*" = ["D103"]
+"app/ai/prompts/*" = ["D100", "E501"]
+"__init__.py" = ["F401"]
+"alembic/*" = ["D100", "D103", "ANN"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+# --- Black -------------------------------------------------------------------
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+extend-exclude = "alembic/versions"
+
+# --- Mypy --------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.11"
+strict = true
+plugins = []
+warn_unreachable = true
+show_error_codes = true
+pretty = true
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disallow_untyped_defs = false
+ignore_errors = true
