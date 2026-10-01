@@ -1,0 +1,23 @@
+{
+  "id": "moderate-participation-consent",
+  "title": "Consent for photo and video recording",
+  "risk_level": "moderate",
+  "target_languages": ["es", "hi"],
+  "locale": "es-US",
+  "tone": "warm, respectful, direct",
+  "audience": "families of students in the after-school program",
+  "purpose": "Collect consent or refusal for classroom photographs",
+  "action": "Return the consent form choosing yes or no",
+  "deadline": "January 16",
+  "source_message": "Our after-school program takes photographs during activities. If you choose to allow your child's photo to appear in the program newsletter or on the program webpage, please sign the consent form and return it by January 16. Choosing no is completely fine. Choosing no does not affect your child's participation in the program in any way. If you would like, you may also give your name so we can send you a printed copy. Please return the form in a timely manner.",
+  "expected_protected_items": [
+    { "item_type": "deadline", "value": "January 16" },
+    { "item_type": "action", "value": "sign the consent form" },
+    { "item_type": "condition", "value": "Choosing no does not affect participation" }
+  ],
+  "review_requirements": [
+    "The optional refusal must not become mandatory - this is the single most likely meaning error.",
+    "Confirm the reassurance sentence about participation survives translation intact.",
+    "Fluent reviewer must confirm 'consent form' is the term families actually use."
+  ]
+}

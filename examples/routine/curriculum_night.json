@@ -1,0 +1,27 @@
+{
+  "id": "routine-curriculum-night",
+  "title": "Family Curriculum Night invitation",
+  "risk_level": "routine",
+  "target_languages": ["es", "hi", "ur"],
+  "locale": "es-US",
+  "tone": "warm, respectful, direct",
+  "audience": "families and community members",
+  "purpose": "Invite families to an evening information session and collect RSVPs",
+  "action": "RSVP using the link",
+  "deadline": "October 3",
+  "source_message": "Dear families, you are invited to attend our Family Curriculum Night on October 8, 6:00-7:00 p.m. in the main school hall. Please RSVP using the link at https://example.org/rsvp by October 3. If you need an interpreter, please call the program office at +1-555-0100. Questions? Contact the program coordinator at families@example.org. Your cooperation is appreciated.",
+  "expected_protected_items": [
+    { "item_type": "name", "value": "Family Curriculum Night" },
+    { "item_type": "date", "value": "October 8" },
+    { "item_type": "time", "value": "6:00-7:00 p.m." },
+    { "item_type": "url", "value": "https://example.org/rsvp" },
+    { "item_type": "deadline", "value": "October 3" },
+    { "item_type": "phone", "value": "+1-555-0100" },
+    { "item_type": "email", "value": "families@example.org" }
+  ],
+  "plain_language_notes": [
+    "'You are invited to attend' is wordy - 'You are invited' is enough.",
+    "'Your cooperation is appreciated' states no action - replace it with the real request.",
+    "'Questions? Contact the program coordinator' should name the response path clearly."
+  ]
+}

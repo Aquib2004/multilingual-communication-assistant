@@ -1,0 +1,17 @@
+{
+  "id": "verify-date-mismatch",
+  "case": "date shifted by one day",
+  "source_message": "Please bring the permission form on September 8 at 8:30 a.m.",
+  "approved_message": "Please bring the permission form on September 8 at 8:30 a.m.",
+  "translation": {
+    "language": "es",
+    "text": "Por favor, traiga el formulario de permiso el 9 de septiembre."
+  },
+  "expected": {
+    "overall_status": "FAIL",
+    "human_review_required": true,
+    "failing_checks": [
+      { "item_type": "date", "source": "September 8", "translated": "9 de septiembre" }
+    ]
+  }
+}

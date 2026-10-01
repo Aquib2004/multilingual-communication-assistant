@@ -1,0 +1,22 @@
+{
+  "id": "verify-conditional-broken",
+  "case": "an optional offer became a requirement",
+  "source_message": "If you would like, you may bring a food item to share.",
+  "approved_message": "If you would like, you may bring a food item to share.",
+  "translation": {
+    "language": "es",
+    "text": "Traiga un alimento para compartir."
+  },
+  "expected": {
+    "overall_status": "FAIL",
+    "human_review_required": true,
+    "failing_checks": [
+      {
+        "item_type": "condition",
+        "source": "If you would like, you may bring",
+        "translated": "Traiga",
+        "detail": "The conditional was dropped and the imperative makes an offer into an obligation."
+      }
+    ]
+  }
+}

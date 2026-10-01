@@ -1,0 +1,63 @@
+---
+name: Feature request
+description: Suggest a capability or an improvement
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do that is hard or impossible today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Plain-language engine
+        - Translation engine
+        - Verification engine
+        - Risk and escalation
+        - New language support
+        - New AI provider
+        - User interface
+        - API / documentation
+        - Privacy and security
+    validations:
+      required: true
+
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language involved
+      description: If this is about a specific language or locale, name it.
+      options:
+        - Not language specific
+        - English
+        - Spanish
+        - Hindi
+        - Urdu
+        - Other (describe below)
+      default: 0
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: This would not require sending real personal data to any service
+          required: true

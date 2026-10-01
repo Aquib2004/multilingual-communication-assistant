@@ -1,0 +1,24 @@
+{
+  "id": "routine-book-drive-volunteer",
+  "title": "Community book drive",
+  "risk_level": "routine",
+  "target_languages": ["es", "hi"],
+  "locale": "es-US",
+  "tone": "warm, respectful, direct",
+  "audience": "community members",
+  "purpose": "Collect gently used books for the community library",
+  "action": "Drop off books at the community center",
+  "deadline": "December 12",
+  "source_message": "Our community book drive is open until December 12. Please drop off gently used books at the community center front desk between 9:00 a.m. and 4:00 p.m. Monday through Friday. We cannot accept textbooks or damaged books. If you have more than 20 books, please call +1-555-0142 first so we can arrange pickup. Thank you for sharing your books with your neighbors.",
+  "expected_protected_items": [
+    { "item_type": "deadline", "value": "December 12" },
+    { "item_type": "time", "value": "9:00 a.m." },
+    { "item_type": "time", "value": "4:00 p.m." },
+    { "item_type": "number", "value": "20" },
+    { "item_type": "phone", "value": "+1-555-0142" }
+  ],
+  "plain_language_notes": [
+    "'Gently used' is friendly but may not be understood - 'books your family has finished with' is clearer.",
+    "The 20-book condition is a real condition and must not be dropped in translation."
+  ]
+}

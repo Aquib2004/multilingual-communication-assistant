@@ -1,0 +1,61 @@
+# Multilingual Communication Assistant - local development stack.
+# Usage:  cp .env.example .env  &&  docker compose up --build
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: mca-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: multilingual_assistant
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d multilingual_assistant"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mca-backend
+    environment:
+      APP_ENV: development
+      LOG_LEVEL: INFO
+      LOG_MESSAGE_CONTENT: "false"
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@postgres:5432/multilingual_assistant
+      CORS_ORIGINS: "http://localhost:3000,http://localhost:5173"
+      AI_PROVIDER: mock
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        ["CMD", "python", "-c",
+         "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/api/health').status==200 else 1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:8000/api
+    container_name: mca-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+    driver: local

@@ -1,0 +1,19 @@
+{
+  "id": "verify-pii-placeholders",
+  "case": "placeholder-only identifiers are treated as safe",
+  "source_message": "Questions? Call the program office at [PHONE] or email [EMAIL]. The program coordinator is [PROGRAM COORDINATOR]. Registered families only: your confirmation code is [FAMILY CODE].",
+  "expected": {
+    "pii_findings": [],
+    "protected_items": [
+      { "item_type": "phone", "value": "[PHONE]" },
+      { "item_type": "email", "value": "[EMAIL]" },
+      { "item_type": "contact", "value": "[PROGRAM COORDINATOR]" },
+      { "item_type": "code", "value": "[FAMILY CODE]" }
+    ],
+    "note": "Bracketed placeholders are the correct convention. They must be preserved verbatim and must not be flagged as real personal data."
+  },
+  "anti_pattern": {
+    "note": "This would be a privacy problem if committed or pasted into the tool.",
+    "bad_example": "Questions? Call Maria Ramirez at 555-0142 or email mramirez@example.org."
+  }
+}

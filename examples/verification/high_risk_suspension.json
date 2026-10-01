@@ -1,0 +1,15 @@
+{
+  "id": "verify-high-risk-suspension",
+  "case": "discipline and legal rights - must escalate",
+  "declared_risk_level": "routine",
+  "source_message": "Your child has been suspended for three school days, effective immediately. You have the right to appeal this decision. A hearing will be held on October 9. Contact the principal at +1-555-0100 to request an interpreter or to begin the appeal process.",
+  "expected": {
+    "risk_level": "HIGH",
+    "escalation_required": true,
+    "ai_output_is_final": false,
+    "escalation_note": "Professional human translation or interpretation is recommended for this high-consequence message.",
+    "evidence_categories": ["discipline", "legal_rights"],
+    "note": "The declared risk level is 'routine'. The system must still return HIGH - a declared level is a floor, not a ceiling."
+  },
+  "warning": "This is fictional test data describing a suspension scenario. It is not a real disciplinary record and must never be sent to anyone."
+}

@@ -1,0 +1,26 @@
+{
+  "id": "routine-second-topic",
+  "title": "Library book fair volunteer sign-up (second, unrelated topic)",
+  "risk_level": "routine",
+  "target_languages": ["es", "hi", "ur"],
+  "locale": "es-US",
+  "tone": "warm, respectful, direct",
+  "audience": "volunteer families",
+  "purpose": "Recruit volunteers for the school library book fair",
+  "action": "Sign up for a volunteer shift",
+  "deadline": "November 6",
+  "source_message": "The library book fair is coming up on November 14. We are looking for 24 volunteers to help set up tables, greet visitors, and restock shelves. Shifts are two hours long and start at 8:00 a.m., 10:00 a.m., or 1:00 p.m. Please sign up for a shift at the library desk by November 6. Volunteers who can read aloud in another language are especially welcome. Thank you for helping our students love reading.",
+  "expected_protected_items": [
+    { "item_type": "date", "value": "November 14" },
+    { "item_type": "deadline", "value": "November 6" },
+    { "item_type": "number", "value": "24" },
+    { "item_type": "time", "value": "8:00 a.m." },
+    { "item_type": "time", "value": "10:00 a.m." },
+    { "item_type": "time", "value": "1:00 p.m." }
+  ],
+  "plain_language_notes": [
+    "'Volunteers who can read aloud in another language are especially welcome' is good - keep it.",
+    "The three shift times are protected and must not be merged or rounded."
+  ],
+  "reuse_note": "Deliberately unrelated to the curriculum night example. Running this through the same assistant demonstrates that the saved instructions are reusable rather than one-off."
+}

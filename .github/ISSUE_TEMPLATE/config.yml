@@ -1,0 +1,14 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/Aquib2004/multilingual-communication-assistant/security/advisories/new
+    about: Please report security issues privately. Do not open a public issue.
+  - name: Question or usage help
+    url: https://github.com/Aquib2004/multilingual-communication-assistant/discussions
+    about: Ask about using the assistant, adding a language, or configuring a provider.
+  - name: High-consequence translation request
+    url: https://github.com/Aquib2004/multilingual-communication-assistant/discussions
+    about: |
+      This tool cannot provide production translations for safety, health, legal
+      rights, discipline, disability services, or emergency content. Use your
+      organisation's approved professional translation or interpretation process.

@@ -1,0 +1,17 @@
+{
+  "id": "verify-ambiguous-deadline",
+  "case": "vague deadline that cannot be translated safely",
+  "source_message": "Return the form soon.",
+  "approved_message": "Return the form soon.",
+  "translation": null,
+  "expected": {
+    "overall_status": "REVIEW",
+    "human_review_required": true,
+    "open_questions": [
+      "What is the actual deadline date? 'Soon' cannot be translated into a date reliably.",
+      "Who must return the form?",
+      "Where should it be returned?"
+    ],
+    "note": "The assistant must flag the ambiguity and help clarify the source BEFORE translating."
+  }
+}

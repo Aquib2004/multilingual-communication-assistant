@@ -1,0 +1,84 @@
+---
+name: Bug report
+description: Something in the assistant behaves incorrectly
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Do not report real student or family data here.** Use fictional or
+        de-identified content and placeholders such as `[FAMILY NAME]`.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you observe, and what did you expect instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open the Communication Workspace
+        2. Paste the source message
+        3. Click "Improve message"
+        4. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: message
+    attributes:
+      label: Source message (de-identified)
+      description: The message you used, with any names or contact details replaced by placeholders.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Which stage failed
+      options:
+        - Plain-language rewrite
+        - Approval
+        - Protected-item extraction
+        - Translation
+        - Verification
+        - Back-translation
+        - Risk / escalation
+        - UI only
+    validations:
+      required: true
+
+  - type: input
+    id: ai-provider
+    attributes:
+      label: AI provider
+      placeholder: mock
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant server logs
+      description: Paste log lines only. Do not include message content or API keys.
+      render: shell
+
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: 0.1.0 / abc1234
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I used fictional or de-identified content with no real personal data
+          required: true
+        - label: I searched existing issues for this

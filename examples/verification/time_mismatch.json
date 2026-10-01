@@ -1,0 +1,17 @@
+{
+  "id": "verify-time-mismatch",
+  "case": "start time shifted by 30 minutes",
+  "source_message": "The program starts at 8:30 a.m. in the main office.",
+  "approved_message": "The program starts at 8:30 a.m. in the main office.",
+  "translation": {
+    "language": "es",
+    "text": "El programa comienza a las 8:00 a. m. en la oficina principal."
+  },
+  "expected": {
+    "overall_status": "FAIL",
+    "human_review_required": true,
+    "failing_checks": [
+      { "item_type": "time", "source": "8:30 a.m.", "translated": "8:00 a. m." }
+    ]
+  }
+}

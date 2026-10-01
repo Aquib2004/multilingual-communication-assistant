@@ -1,0 +1,26 @@
+{
+  "id": "moderate-schedule-change",
+  "title": "Change to the school day start time",
+  "risk_level": "moderate",
+  "target_languages": ["es", "hi", "ur"],
+  "locale": "es-US",
+  "tone": "warm, respectful, direct",
+  "audience": "all families with students in grades 3-5",
+  "purpose": "Tell families about a one-day change to the start time",
+  "action": "Send students to school at 9:45 a.m. on the changed day",
+  "deadline": "none stated",
+  "source_message": "On Thursday, December 3, grades 3, 4, and 5 will start at 9:45 a.m. instead of 8:15 a.m. because of building maintenance. Bus routes will run on the normal schedule. Students should arrive by the new time; arriving later counts as a late arrival. If your child takes a bus, you do not need to do anything. If you drive your child, please plan for the later start. Questions? Call the school office at +1-555-0110.",
+  "expected_protected_items": [
+    { "item_type": "date", "value": "December 3" },
+    { "item_type": "time", "value": "9:45 a.m." },
+    { "item_type": "time", "value": "8:15 a.m." },
+    { "item_type": "number", "value": "3, 4, and 5" },
+    { "item_type": "phone", "value": "+1-555-0110" },
+    { "item_type": "condition", "value": "If you take a bus, you do not need to do anything." }
+  ],
+  "review_requirements": [
+    "Confirm the two start times are different and in the right order in every language.",
+    "Confirm the bus exception is not read as a requirement to do nothing all day.",
+    "Fluent reviewer must confirm the tone stays reassuring rather than alarming."
+  ]
+}

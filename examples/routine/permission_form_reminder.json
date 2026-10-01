@@ -1,0 +1,22 @@
+{
+  "id": "routine-permission-form-reminder",
+  "title": "Field trip permission form deadline",
+  "risk_level": "routine",
+  "target_languages": ["es", "hi"],
+  "locale": "es-US",
+  "tone": "warm, respectful, direct",
+  "audience": "families of grade 5 students",
+  "purpose": "Collect signed field trip permission forms before the trip",
+  "action": "Return the signed permission form to your child's teacher",
+  "deadline": "Friday, September 18",
+  "source_message": "Students are expected to return the field trip permission form in a timely manner. The form should be signed by a parent or guardian and returned to your child's teacher by Friday, September 18. Contact the undersigned with inquiries. Please bring a pair of walking shoes on the day of the trip if you would like.",
+  "expected_protected_items": [
+    { "item_type": "deadline", "value": "Friday, September 18" },
+    { "item_type": "action", "value": "return the field trip permission form" }
+  ],
+  "plain_language_notes": [
+    "'Students are expected to return' - name the actor and use a direct verb.",
+    "'In a timely manner' is ambiguous - replace with the actual date.",
+    "'Contact the undersigned' is unfamiliar - use 'the program office' and a phone number."
+  ]
+}

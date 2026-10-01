@@ -1,0 +1,15 @@
+{
+  "id": "verify-conditional-preserved",
+  "case": "optionality correctly preserved",
+  "source_message": "If you would like, you may bring a food item to share. This is optional. Label common allergens when possible.",
+  "approved_message": "If you would like, you may bring a food item to share. This is optional. Label common allergens when possible.",
+  "translation": {
+    "language": "es",
+    "text": "Si lo desea, puede traer un alimento para compartir. Esto es opcional. Etiquete los alérgenos comunes cuando sea posible."
+  },
+  "expected": {
+    "overall_status": "PASS",
+    "human_review_required": true,
+    "note": "Facts pass, but a fluent reviewer still confirms the tone reads as genuinely optional rather than as a polite requirement."
+  }
+}

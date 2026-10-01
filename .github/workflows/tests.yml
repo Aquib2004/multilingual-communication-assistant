@@ -1,0 +1,77 @@
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secret-scan:
+    name: Secret and PII scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Ensure .env is not tracked
+        run: |
+          if git ls-files --error-unmatch .env >/dev/null 2>&1; then
+            echo "::error::.env must never be committed"
+            exit 1
+          fi
+          echo "OK: .env is not tracked"
+
+      - name: Ensure no build artefacts or venvs are tracked
+        run: |
+          tracked=$(git ls-files | grep -E '(^|/)(node_modules|\.venv|venv|__pycache__|\.pytest_cache|dist|coverage)(/|$)' || true)
+          if [ -n "$tracked" ]; then
+            echo "::error::Build artefacts are tracked:"
+            echo "$tracked"
+            exit 1
+          fi
+          echo "OK: no build artefacts tracked"
+
+      - name: Scan for committed secrets
+        run: |
+          # Fictional example data uses the reserved 555-01xx range and
+          # example.org domains, which are safe by design.
+          hits=$(git grep -nEI '(sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36})' -- . ':!*.lock' || true)
+          if [ -n "$hits" ]; then
+            echo "::error::Possible secret detected:"
+            echo "$hits"
+            exit 1
+          fi
+          echo "OK: no secrets detected"
+
+  integrity:
+    name: Repository integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Required open-source files exist
+        run: |
+          for f in LICENSE README.md CONTRIBUTING.md CODE_OF_CONDUCT.md SECURITY.md CHANGELOG.md .gitignore .env.example; do
+            if [ ! -f "$f" ]; then
+              echo "::error::Missing required file: $f"
+              exit 1
+            fi
+          done
+          echo "OK: all required open-source files present"
+
+      - name: Example data uses reserved ranges
+        run: |
+          # Guard against someone committing a plausible-looking real contact.
+          bad=$(grep -rnE '\b(?!555-01)[0-9]{3}-[0-9]{4}\b' --include='*.json' --include='*.md' examples/ -P || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Possible real phone number in examples:"
+            echo "$bad"
+            exit 1
+          fi
+          echo "OK: examples use the reserved 555-01xx fictional range"

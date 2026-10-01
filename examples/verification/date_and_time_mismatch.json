@@ -1,0 +1,19 @@
+{
+  "id": "verify-date-and-time-mismatch",
+  "case": "both the date and the time drifted in one message",
+  "source_message": "Please bring the permission form on September 8 at 8:30 a.m.",
+  "approved_message": "Please bring the permission form on September 8 at 8:30 a.m.",
+  "translation": {
+    "language": "es",
+    "text": "Por favor, traiga el formulario de permiso el 9 de septiembre a las 8:00 a. m."
+  },
+  "expected": {
+    "overall_status": "FAIL",
+    "human_review_required": true,
+    "failing_checks": [
+      { "item_type": "date", "source": "September 8", "translated": "9 de septiembre" },
+      { "item_type": "time", "source": "8:30 a.m.", "translated": "8:00 a. m." }
+    ],
+    "note": "Both mismatches must be reported independently. A passing check must never mask a failing one."
+  }
+}
