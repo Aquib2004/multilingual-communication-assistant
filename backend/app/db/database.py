@@ -120,6 +120,6 @@ async def database_is_ready() -> bool:
         async with engine.connect() as connection:
             await connection.execute(text("SELECT 1"))
         return True
-    except Exception as exc:  # noqa: BLE001 - health must never raise
+    except Exception as exc:
         logger.warning("database health check failed", error_type=type(exc).__name__)
         return False

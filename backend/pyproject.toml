@@ -97,16 +97,21 @@ select = [
 ignore = [
   "D203",   # incompatible with D211
   "D213",   # incompatible with D212
+  "D107",   # __init__ docstrings are covered by the class docstring
   "ANN401", # allow Any where genuinely dynamic (AI payloads)
   "B008",   # FastAPI Depends() in defaults is idiomatic
+  "RUF001", # ambiguous unicode in regexes is intentional (en/em dashes, locales)
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["D100", "D101", "D102", "D103", "D104", "ANN001", "ANN201"]
+"tests/*" = ["D100", "D101", "D102", "D103", "D104", "ANN001", "ANN201", "S101"]
 "app/api/routes/*" = ["D103"]
 "app/ai/prompts/*" = ["D100", "E501"]
+"app/models/*" = ["D101", "D105"]
+"app/core/errors.py" = ["D101"]
+"app/verification/normalisation.py" = ["D415"]
 "__init__.py" = ["F401"]
-"alembic/*" = ["D100", "D103", "ANN"]
+"alembic/*" = ["D100", "D103", "ANN", "E501"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["app"]

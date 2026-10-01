@@ -61,12 +61,10 @@ def configure_logging(settings: Settings) -> None:
 
     if not settings.should_log_message_content:
         # A final safety net: even if a caller passes text, filter it out.
-        structlog.configure(processors=[_redact_text] + processors)
+        structlog.configure(processors=[_redact_text, *processors])
 
 
-def _redact_text(
-    _logger: Any, _method_name: str, event_dict: dict[str, Any]
-) -> dict[str, Any]:
+def _redact_text(_logger: Any, _method_name: str, event_dict: dict[str, Any]) -> dict[str, Any]:
     """Replace obviously sensitive event-dict values before rendering."""
     sensitive = {"text", "message", "body", "content", "source", "translation"}
     for key in sensitive:

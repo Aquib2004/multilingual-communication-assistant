@@ -23,7 +23,9 @@ EMAIL_PATTERN = re.compile(
 PHONE_PATTERN = re.compile(r"\b(?:\+1[-. ]?)?\(?\d{3}\)?[-. ]\d{3}[-. ]\d{4}\b")
 
 #: Student / employee identifiers.
-STUDENT_ID_PATTERN = re.compile(r"\b(?:student|emp|employee|pupil)[ _-]?(?:id|no|num|number)[:# ]*\S+", re.I)
+STUDENT_ID_PATTERN = re.compile(
+    r"\b(?:student|emp|employee|pupil)[ _-]?(?:id|no|num|number)[:# ]*\S+", re.I
+)
 
 #: Common given names. Deliberately short and conservative: this is a prompt
 #: for a human, not a verdict. It exists to catch "Call Maria about Juan" when

@@ -141,7 +141,9 @@ class AIProviderError(AppError):
 class AIProviderAuthError(AIProviderError):
     code = "AI_PROVIDER_AUTH_ERROR"
     status_code = 502
-    default_message = "The language assistant is not configured correctly. Contact the administrator."
+    default_message = (
+        "The language assistant is not configured correctly. Contact the administrator."
+    )
 
 
 class AIProviderRateLimitError(AIProviderError):

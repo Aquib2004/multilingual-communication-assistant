@@ -6,7 +6,7 @@ and the UI all read this registry, so no other change is required.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from app.core.errors import UnsupportedLanguageError
 

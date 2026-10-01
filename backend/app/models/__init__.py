@@ -19,8 +19,8 @@ from app.models.verification import (
 )
 
 __all__ = [
-    "Base",
     "BackTranslationPair",
+    "Base",
     "FactCheck",
     "Issue",
     "Message",

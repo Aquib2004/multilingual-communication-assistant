@@ -30,9 +30,7 @@ class Base(DeclarativeBase):
 class UUIDPrimaryKeyMixin:
     """Adds a portable string UUID primary key."""
 
-    id: Mapped[str] = mapped_column(
-        String(36), primary_key=True, default=new_uuid, index=True
-    )
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_uuid, index=True)
 
 
 class TimestampMixin:

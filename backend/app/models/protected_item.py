@@ -70,9 +70,7 @@ class ProtectedItem(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     message_id: Mapped[str] = mapped_column(
         String(36), ForeignKey("messages.id", ondelete="CASCADE"), nullable=False, index=True
     )
-    item_type: Mapped[ProtectedItemType] = mapped_column(
-        String(24), nullable=False, index=True
-    )
+    item_type: Mapped[ProtectedItemType] = mapped_column(String(24), nullable=False, index=True)
     value: Mapped[str] = mapped_column(Text, nullable=False)
     placeholder: Mapped[str] = mapped_column(String(16), nullable=False)
     must_match_exactly: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)

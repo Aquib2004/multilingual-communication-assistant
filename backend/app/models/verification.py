@@ -130,7 +130,6 @@ class ToneAssessment(Base):
         }
 
 
-
 class VerificationReport(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     """The full verification record for one translation."""
 
@@ -152,9 +151,7 @@ class VerificationReport(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     summary: Mapped[dict[str, int]] = mapped_column(JSON, default=dict, nullable=False)
 
     risk_level: Mapped[str] = mapped_column(String(16), nullable=False, default="routine")
-    risk_evidence: Mapped[list[dict[str, Any]]] = mapped_column(
-        JSON, default=list, nullable=False
-    )
+    risk_evidence: Mapped[list[dict[str, Any]]] = mapped_column(JSON, default=list, nullable=False)
     risk_declared_by_user: Mapped[str | None] = mapped_column(String(16), nullable=True)
 
     escalation_note: Mapped[str | None] = mapped_column(Text, nullable=True)

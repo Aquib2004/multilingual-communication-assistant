@@ -7,7 +7,7 @@ from typing import Any
 
 from pydantic import Field, field_validator
 
-from app.schemas.common import ApiModel, ProtectedItemTypeEnum
+from app.schemas.common import ApiModel
 
 
 class TranslateRequest(ApiModel):
@@ -29,9 +29,7 @@ class TranslateRequest(ApiModel):
         description="BCP-47 tag such as 'es-US'. Used for date and time conventions.",
     )
     tone: str | None = Field(default=None, max_length=255)
-    reading_level: str | None = Field(
-        default=None, max_length=100, description="e.g. 'grade 6'."
-    )
+    reading_level: str | None = Field(default=None, max_length=100, description="e.g. 'grade 6'.")
 
     @field_validator("target_languages")
     @classmethod

@@ -6,7 +6,7 @@ from datetime import datetime
 from enum import StrEnum
 from typing import TYPE_CHECKING, Any
 
-from sqlalchemy import JSON, DateTime, Enum, ForeignKey, String, Text
+from sqlalchemy import JSON, DateTime, Enum, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
@@ -56,7 +56,9 @@ class Message(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     action: Mapped[str] = mapped_column(String(500), default="", nullable=False)
     deadline: Mapped[str] = mapped_column(String(255), default="", nullable=False)
     contact_path: Mapped[str] = mapped_column(String(500), default="", nullable=False)
-    tone: Mapped[str] = mapped_column(String(255), default="warm, respectful, direct", nullable=False)
+    tone: Mapped[str] = mapped_column(
+        String(255), default="warm, respectful, direct", nullable=False
+    )
     locale: Mapped[str] = mapped_column(String(35), default="en-US", nullable=False)
     risk_level: Mapped[RiskLevel] = mapped_column(
         Enum(RiskLevel, native_enum=False, length=16),
