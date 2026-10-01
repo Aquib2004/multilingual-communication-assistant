@@ -289,15 +289,23 @@ def parse_time(text: str) -> TimeValue | None:
     if minute > 59:
         return None
 
-    meridiem = match.group("start_meridiem")
-    resolved_hour = _normalise_hour(to_int(match.group("h")), meridiem)
+    start_meridiem = match.group("start_meridiem")
+    end_meridiem_token = match.group("end_meridiem")
+    is_range = match.group("h2") is not None
+
+    # In "6:00-7:00 p.m." the marker binds to the end of the range, so it
+    # governs the whole range. Using only the start's marker would read the
+    # range as 6 a.m. to 7 p.m.
+    governing = start_meridiem or (end_meridiem_token if is_range else None)
+    resolved_hour = _normalise_hour(to_int(match.group("h")), governing)
 
     end_hour: int | None = None
     end_minute: int | None = None
-    if match.group("h2") is not None:
-        end_meridiem = match.group("end_meridiem") or meridiem
+    if is_range:
         end_hour = _normalise_hour(
-            to_int(match.group("h2")), end_meridiem, _meridiem_offset(meridiem)
+            to_int(match.group("h2")),
+            end_meridiem_token or start_meridiem,
+            _meridiem_offset(governing),
         )
         end_minute = to_int(match.group("m2"))
         if end_hour < resolved_hour:
