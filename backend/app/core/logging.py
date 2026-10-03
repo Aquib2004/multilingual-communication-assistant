@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import logging
 import sys
+from collections.abc import MutableMapping
 from typing import Any
 
 import structlog
@@ -43,6 +44,12 @@ def configure_logging(settings: Settings) -> None:
         structlog.processors.UnicodeDecoder(),
     ]
 
+    if not settings.should_log_message_content:
+        # A final safety net: even if a caller passes text, redact it.
+        # Must sit *before* the renderer, which turns the event dict into a
+        # string that _redact_text could no longer inspect.
+        processors.append(_redact_text)
+
     renderer: Any = (
         structlog.dev.ConsoleRenderer(colors=False)
         if settings.app_env.lower() == "development"
@@ -63,12 +70,10 @@ def configure_logging(settings: Settings) -> None:
         cache_logger_on_first_use=True,
     )
 
-    if not settings.should_log_message_content:
-        # A final safety net: even if a caller passes text, filter it out.
-        structlog.configure(processors=[_redact_text, *processors])
 
-
-def _redact_text(_logger: Any, _method_name: str, event_dict: dict[str, Any]) -> dict[str, Any]:
+def _redact_text(
+    _logger: Any, _method_name: str, event_dict: MutableMapping[str, Any]
+) -> MutableMapping[str, Any]:
     """Replace obviously sensitive event-dict values before rendering."""
     sensitive = {"text", "message", "body", "content", "source", "translation"}
     for key in sensitive:

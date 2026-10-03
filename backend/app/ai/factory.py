@@ -53,7 +53,17 @@ def build_provider(settings: Settings) -> AIProvider:
             "Set it, or use AI_PROVIDER=mock to run without a key."
         )
 
-    provider = provider_class(settings)
+    provider: AIProvider
+    # Each provider takes the full Settings object, so construct explicitly
+    # rather than calling through the registry: mypy cannot verify a
+    # positional argument against the abstract base class.
+    if provider_class is MockProvider:
+        provider = MockProvider(settings)
+    elif provider_class is OpenAIProvider:
+        provider = OpenAIProvider(settings)
+    else:
+        provider = LocalProvider(settings)
+
     logger.info("ai provider selected", provider=provider.name, model=provider.model)
     return provider
 

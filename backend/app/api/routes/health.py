@@ -13,6 +13,7 @@ from app.api.dependencies import SettingsDep
 from app.core.languages import LOCALES, SOURCE_LANGUAGE, list_languages
 from app.db.base import utc_now
 from app.db.database import database_is_ready
+from app.schemas.common import RiskLevelEnum
 from app.schemas.verification import (
     ExampleMessageResponse,
     ExamplesResponse,
@@ -22,7 +23,7 @@ from app.schemas.verification import (
     RiskLevelInfo,
     RiskLevelsResponse,
 )
-from app.verification.risk_classifier import RISK_LEVELS, RiskTier
+from app.verification.risk_classifier import RISK_LEVELS
 
 router = APIRouter(tags=["reference"])
 
@@ -85,11 +86,11 @@ async def risk_levels() -> RiskLevelsResponse:
     return RiskLevelsResponse(
         levels=[
             RiskLevelInfo(
-                level=RiskTier(tier),
-                label=str(info["label"]),
-                description=str(info["description"]),
-                examples=[str(item) for item in info["examples"]],
-                review_requirements=[str(item) for item in info["review_requirements"]],
+                level=RiskLevelEnum(tier.value),
+                label=info["label"],
+                description=info["description"],
+                examples=list(info["examples"]),
+                review_requirements=list(info["review_requirements"]),
             )
             for tier, info in RISK_LEVELS.items()
         ]

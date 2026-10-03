@@ -111,11 +111,11 @@ def _date_order(locale: Locale | None) -> DateOrder:
 
 def _signature_word(sentence: str) -> str:
     """The most distinctive word in a sentence, for locating its translation."""
-    words = list(re.findall(r"[A-Za-z]{4,}", sentence.lower()))
+    words: list[str] = list(re.findall(r"[A-Za-z]{4,}", sentence.lower()))
     skip = {"please", "thank", "will", "have", "your", "with", "from", "should"}
-    for candidate in words:
-        if candidate not in skip:
-            return candidate
+    for word in words:
+        if word not in skip:
+            return word
     return words[0] if words else ""
 
 
@@ -164,18 +164,18 @@ def _find_translation_candidate(item: ExtractedItem, translation: str) -> tuple[
 
     if item.item_type in {"date", "datetime"}:
         if parse_any_date(value, DateOrder.UNKNOWN) is not None:
-            for candidate in all_dates(translation, DateOrder.UNKNOWN):
+            for found_date in all_dates(translation, DateOrder.UNKNOWN):
                 return (
-                    _describe_window(translation, candidate),
+                    _describe_window(translation, found_date),
                     "Located a date in the translation.",
                 )
         return None, "No date was found in the translation."
 
     if item.item_type == "time":
         if parse_time(value) is not None:
-            for candidate in all_times(translation):
+            for found_time in all_times(translation):
                 return (
-                    _describe_window(translation, candidate),
+                    _describe_window(translation, found_time),
                     "Located a time in the translation.",
                 )
         return None, "No time was found in the translation."
@@ -219,22 +219,22 @@ def _compare_date(
     if not candidates:
         return CheckStatus.FAIL, "No date appears in the translation."
 
-    for candidate in candidates:
-        if candidate.ambiguous:
+    for found_date in candidates:
+        if found_date.ambiguous:
             continue
-        if source_date.same_day(candidate) and (
-            source_date.year is None or candidate.year is None or source_date.year == candidate.year
+        if source_date.same_day(found_date) and (
+            source_date.year is None
+            or found_date.year is None
+            or source_date.year == found_date.year
         ):
             detail = "The same calendar date is present."
-            if candidate.raw != source_date.raw:
-                detail = (
-                    f"'{candidate.raw}' is the same date written in the target locale's format."
-                )
+            if found_date.raw != source_date.raw:
+                detail = f"'{found_date.raw}' is the same date in the target locale's format."
             return CheckStatus.PASS, detail
 
-    found = ", ".join(candidate.raw for candidate in candidates)
+    listed = ", ".join(found.raw for found in candidates)
     return CheckStatus.FAIL, (
-        f"The translation states {found}, which is not {source_date.label()}. "
+        f"The translation states {listed}, which is not {source_date.label()}. "
         f"The deadline has changed."
     )
 

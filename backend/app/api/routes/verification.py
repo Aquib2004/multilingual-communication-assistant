@@ -14,6 +14,7 @@ from app.api.dependencies import (
 from app.api.routes.messages import _report_to_response
 from app.core.errors import TranslationNotFoundError
 from app.models.translation import Translation
+from app.schemas.common import RiskLevelEnum
 from app.schemas.verification import (
     EscalationRequest,
     EscalationResponse,
@@ -80,10 +81,21 @@ async def check_escalation(payload: EscalationRequest) -> EscalationResponse:
         payload.text, payload.declared_risk_level.value if payload.declared_risk_level else None
     )
     return EscalationResponse(
-        level=assessment.level.value,
-        declared_by_user=assessment.declared_by_user,
+        level=RiskLevelEnum(assessment.level.value),
+        declared_by_user=(
+            RiskLevelEnum(assessment.declared_by_user.value)
+            if assessment.declared_by_user
+            else None
+        ),
         # RiskEvidence is a dataclass; convert it rather than passing it through.
-        evidence=[RiskEvidenceResponse(**item.to_dict()) for item in assessment.evidence],
+        evidence=[
+            RiskEvidenceResponse(
+                category=item.category,
+                matched=list(item.matched),
+                excerpt=item.excerpt,
+            )
+            for item in assessment.evidence
+        ],
         escalation_note=assessment.escalation_note,
         review_requirements=assessment.review_requirements,
         ai_output_is_final=False,

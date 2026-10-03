@@ -20,6 +20,7 @@ from app.ai.base import (
     AIRequest,
     AIResponse,
     BackTranslationOutput,
+    RewriteChanges,
     RewriteOutput,
     ToneOutput,
     TranslationOutput,
@@ -145,7 +146,7 @@ class MockProvider(AIProvider):
         """Apply the plain-language rule table and explain every change."""
         source = self._source_from(request)
         revised = source
-        changes: list[dict[str, str]] = []
+        changes: list[RewriteChanges] = []
         seen_codes: set[str] = set()
 
         for rule in ALL_REWRITE_RULES:
@@ -158,11 +159,11 @@ class MockProvider(AIProvider):
                 continue
             seen_codes.add(rule.reason_code)
             changes.append(
-                {
-                    "original": matches[0].group(0).strip(),
-                    "revised": rule.replacement.strip() or "(removed)",
-                    "reason": rule.reason,
-                }
+                RewriteChanges(
+                    original=matches[0].group(0).strip(),
+                    revised=rule.replacement.strip() or "(removed)",
+                    reason=rule.reason,
+                )
             )
 
         revised = tidy_sentences(revised)

@@ -11,6 +11,14 @@ from app.api.dependencies import MessageServiceDep, SessionDep
 from app.core.errors import ValidationError
 from app.core.languages import get_language
 from app.models.message import Message, MessageState, RiskLevel
+from app.schemas.common import (
+    MessageStateEnum,
+    PIIFindingSchema,
+    ProtectedItemTypeEnum,
+    ReadingLevelSchema,
+    RiskLevelEnum,
+    VerificationStatusEnum,
+)
 from app.schemas.message import (
     ApproveRequest,
     ChangeSummary,
@@ -24,8 +32,10 @@ from app.schemas.message import (
 )
 from app.schemas.translation import TranslationResponse
 from app.schemas.verification import (
+    RiskResponse,
     ToneAssessmentResponse,
     VerificationReportResponse,
+    VerificationSummaryResponse,
 )
 
 router = APIRouter(prefix="/messages", tags=["messages"])
@@ -39,7 +49,7 @@ def to_response(message: Message) -> MessageResponse:
     """
     return MessageResponse(
         id=message.id,
-        state=message.state,
+        state=MessageStateEnum(message.state.value),
         audience=message.audience,
         purpose=message.purpose,
         action=message.action,
@@ -47,7 +57,7 @@ def to_response(message: Message) -> MessageResponse:
         contact_path=message.contact_path,
         tone=message.tone,
         locale=message.locale,
-        risk_level=message.risk_level,
+        risk_level=RiskLevelEnum(message.risk_level.value),
         source_message=message.source_message,
         revised_message=message.revised_message,
         changes=message.changes or [],
@@ -62,7 +72,7 @@ def to_response(message: Message) -> MessageResponse:
         protected_items=[
             ProtectedItemResponse(
                 id=item.id,
-                item_type=item.item_type,
+                item_type=ProtectedItemTypeEnum(item.item_type.value),
                 value=item.value,
                 placeholder=item.placeholder,
                 must_match_exactly=item.must_match_exactly,
@@ -116,26 +126,63 @@ def _report_to_response(report: Any) -> VerificationReportResponse:
         message_id=report.message_id,
         translation_id=report.translation_id,
         target_language=report.target_language,
-        overall_status=report.overall_status,
+        overall_status=VerificationStatusEnum(report.overall_status),
         human_review_required=report.human_review_required,
-        summary=report.summary or {},
-        checks=[check.to_dict() for check in report.checks],  # type: ignore[arg-type]
-        back_translation=[pair.to_dict() for pair in report.back_translation_pairs],  # type: ignore[arg-type]
-        tone_assessment=(tone.to_dict() if tone else ToneAssessmentResponse().model_dump()),
-        issues=[issue.to_dict() for issue in report.issues],  # type: ignore[arg-type]
-        risk={
-            "level": report.risk_level,
-            "declared_by_user": report.risk_declared_by_user,
-            "evidence": report.risk_evidence or [],
-            "review_requirements": report.review_requirements or [],
-        },
+        summary=VerificationSummaryResponse(**_summary_counts(report.summary or {})),
+        checks=[check.to_dict() for check in report.checks],
+        back_translation=[pair.to_dict() for pair in report.back_translation_pairs],
+        tone_assessment=_tone_assessment(tone),
+        issues=[issue.to_dict() for issue in report.issues],
+        risk=RiskResponse(
+            level=RiskLevelEnum(report.risk_level),
+            declared_by_user=(
+                RiskLevelEnum(report.risk_declared_by_user)
+                if report.risk_declared_by_user
+                else None
+            ),
+            evidence=list(report.risk_evidence or []),
+            review_requirements=list(report.review_requirements or []),
+        ),
         escalation_note=report.escalation_note,
-        review_requirements=report.review_requirements or [],
+        review_requirements=list(report.review_requirements or []),
         provider=report.provider,
         model=report.model,
         verified_at=report.verified_at,
         created_at=report.created_at,
     )
+
+
+def _summary_counts(raw: dict[str, Any]) -> dict[str, Any]:
+    """Normalise the stored summary into the fixed response shape."""
+    return {
+        "total": int(raw.get("total", 0)),
+        "passed": int(raw.get("passed", 0)),
+        "warnings": int(raw.get("warnings", 0)),
+        "failures": int(raw.get("failures", 0)),
+        "review_required": int(raw.get("review_required", 0)),
+    }
+
+
+def _tone_assessment(tone: Any) -> ToneAssessmentResponse:
+    """Build the tone response, tolerating a report saved without one.
+
+    `ToneAssessmentResponse.tone` is required, so the empty case has to supply
+    an explicit "unknown" rather than relying on model defaults.
+    """
+    if tone is None:
+        return ToneAssessmentResponse(
+            tone="unknown",
+            mechanical_phrases=[],
+            cultural_awkwardness=[],
+            terminology_notes=[],
+            status=VerificationStatusEnum.REVIEW_REQUIRED,
+        )
+    return ToneAssessmentResponse.model_validate(tone.to_dict())
+
+
+def _reading_level_payload(raw: dict[str, Any]) -> ReadingLevelSchema:
+    """Build the reading-level response, tolerating a provider's extra keys."""
+    return ReadingLevelSchema.model_validate(raw or {})
 
 
 # --- Routes -----------------------------------------------------------------
@@ -256,10 +303,24 @@ async def rewrite_message(
         # Convert the AI-layer models to the API models explicitly. Passing
         # RewriteChanges straight through fails because the response model
         # forbids extra keys and expects its own ChangeSummary type.
-        changes=[ChangeSummary(**change.model_dump()) for change in output.changes],
+        changes=[
+            ChangeSummary(
+                original=change.original,
+                revised=change.revised,
+                reason=change.reason,
+            )
+            for change in output.changes
+        ],
         open_questions=list(output.open_questions),
-        reading_level=output.reading_level,
-        pii_warnings=findings,
+        reading_level=_reading_level_payload(output.reading_level),
+        pii_warnings=[
+            PIIFindingSchema(
+                category=finding.category,
+                excerpt=finding.excerpt,
+                severity=finding.severity,
+            )
+            for finding in findings
+        ],
         provider=provider,
         model=model,
     )

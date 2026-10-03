@@ -52,7 +52,7 @@ class EscalationService:
     @staticmethod
     def review_requirements(level: str | RiskTier) -> list[str]:
         """The review a given risk level requires."""
-        return [str(item) for item in RISK_LEVELS[RiskTier(level)]["review_requirements"]]
+        return list(RISK_LEVELS[RiskTier(level)]["review_requirements"])
 
     @staticmethod
     def ai_output_is_final(level: str | RiskTier) -> bool:

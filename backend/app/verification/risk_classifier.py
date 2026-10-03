@@ -13,6 +13,20 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from enum import StrEnum
+from typing import TypedDict
+
+
+class RiskLevelInfo(TypedDict):
+    """Static metadata for one risk tier.
+
+    A TypedDict rather than ``dict[str, object]``: the latter erases the field
+    types, so every consumer needs a cast and mypy cannot check any of it.
+    """
+
+    label: str
+    description: str
+    examples: list[str]
+    review_requirements: list[str]
 
 
 class RiskTier(StrEnum):
@@ -211,7 +225,7 @@ NEGATIVE_CONTEXT = [
     "for a training exercise",
 ]
 
-RISK_LEVELS: dict[RiskTier, dict[str, object]] = {
+RISK_LEVELS: dict[RiskTier, RiskLevelInfo] = {
     RiskTier.ROUTINE: {
         "label": "Routine",
         "description": "A welcome note, event reminder, or classroom update.",
@@ -291,8 +305,7 @@ class RiskAssessment:
     @property
     def review_requirements(self) -> list[str]:
         """The review this level requires."""
-        requirements = RISK_LEVELS[self.level]["review_requirements"]
-        return [str(item) for item in requirements]
+        return list(RISK_LEVELS[self.level]["review_requirements"])
 
     def to_dict(self) -> dict[str, object]:
         """JSON-serialisable form for the API.

@@ -163,7 +163,7 @@ class TimeValue:
     @property
     def end_minutes(self) -> int | None:
         """Minutes since midnight for the end of a range, if there is one."""
-        if self.end_hour is None:
+        if self.end_hour is None or self.end_minute is None:
             return None
         return self.end_hour * 60 + self.end_minute
 
