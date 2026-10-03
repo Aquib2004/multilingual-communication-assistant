@@ -227,6 +227,52 @@ wording ("Return the form soon"), date mismatch (September 8 → September 9),
 time mismatch (8:30 a.m. → 8:00 a.m.), high-risk escalation, PII placeholders,
 and a full mock-provider integration run.
 
+### Live smoke tests
+
+The unit tests use an in-process client, which can miss defects that only appear
+once a model is serialised or reloaded from the database. Two scripts therefore
+exercise the **running** system and are worth running before any release:
+
+```bash
+# Terminal 1
+cd backend && uvicorn app.main:app --host 127.0.0.1 --port 8000
+
+# Terminal 2 - 38 checks against the live server
+cd backend && python smoke_live.py
+
+# Terminal 2 - 18 checks driving the full workflow from the frontend origin
+cd frontend && python ../backend/.venv/Scripts/python e2e_live.py
+```
+
+`smoke_live.py` found three real 500s during development that the unit suite
+passed straight over: a structlog processor that crashed the exception handler,
+a `String` column that returned a plain `str` instead of an enum, and ORM
+dataclasses passed into Pydantic response models. Keep running it.
+
+### Verification status
+
+| Check | Command | Result |
+| --- | --- | --- |
+| Backend tests | `pytest -q` | **79 passed** |
+| Backend lint / format | `ruff check`, `black --check` | **clean** |
+| Backend types | `mypy --strict app` | **clean, 51 files** |
+| Backend live smoke | `python smoke_live.py` | **38/38 checks passed** |
+| Frontend types | `npm run typecheck` | **clean** (strict, `noUncheckedIndexedAccess`) |
+| Frontend lint | `npm run lint` | **clean**, zero warnings at `--max-warnings 0` |
+| Frontend tests | `npm run test -- --run` | **26 passed** |
+| Frontend build | `npm run build` | **succeeds** |
+| Frontend ↔ backend | `python e2e_live.py` | **18/18 checks passed** |
+| Alembic (SQLite) | `upgrade → downgrade → upgrade` | **succeeds** |
+| Compose config | `docker compose config --quiet` | **valid** |
+
+**Not yet verified.** `docker compose build` / `up` and the PostgreSQL test
+matrix have **not** been run: the Dockerfiles and compose file are written and
+the compose file parses, but Docker Desktop was not installed on the machine
+used for development, so no image has actually been built. The OpenAI and local
+providers have also never been called against a live API, because no key or
+local model server was available; only the `mock` provider is exercised. Treat
+those two areas as untested rather than working.
+
 ---
 
 ## Project structure
@@ -298,7 +344,7 @@ changes, type hints, tests for new behaviour, no secrets, no real personal data.
 - [x] Deterministic fact-map verification and back-translation
 - [x] Risk classification and escalation
 - [x] React Communication Workspace
-- [x] Docker + CI
+- [x] Docker + CI (files written; images not yet built — see Verification status)
 - [ ] Locale-specific terminology glossaries from community reviewers
 - [ ] User accounts, teams, and shared glossaries
 - [ ] Human reviewer sign-off workflow and audit trail
