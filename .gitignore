@@ -60,5 +60,7 @@ desktop.ini
 # --- Logs & temp -----------------------------------------------------------
 logs/
 *.log
+# Captured command output used while debugging locally.
+*.out
 tmp/
 temp/
