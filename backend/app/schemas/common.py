@@ -102,7 +102,15 @@ class PIIFindingSchema(ApiModel):
 
 
 class ReadingLevelSchema(ApiModel):
-    """Basic readability signals for the revised source."""
+    """Basic readability signals for the revised source.
+
+    Deliberately permissive: the provider may compute additional indicators
+    (total_words, Flesch score, and so on) and those must not be rejected just
+    because this model does not name them. Use ``extra="allow"`` so a richer
+    provider response still serialises instead of failing the request.
+    """
+
+    model_config = ConfigDict(extra="allow", str_strip_whitespace=True)
 
     avg_sentence_length: float | None = None
     longest_sentence_words: int | None = None

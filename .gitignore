@@ -38,6 +38,13 @@ pnpm-debug.log*
 # --- Databases -------------------------------------------------------------
 *.sqlite3
 *.sqlite3-journal
+# Default local dev/test database files. These are throwaway and must never be
+# committed: they can contain real draft message content.
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+backend/app.db
 postgres_data/
 pgdata/
 *.dump

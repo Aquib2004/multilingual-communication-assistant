@@ -19,10 +19,27 @@ services:
       timeout: 5s
       retries: 10
 
+  migrate:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: mca-migrate
+    # Applies `alembic upgrade head` once, then exits. The API depends on this
+    # completing so the schema is guaranteed to exist before traffic arrives.
+    command: ["alembic", "upgrade", "head"]
+    environment:
+      APP_ENV: development
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@postgres:5432/multilingual_assistant
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      # Context is the repository root because the image also ships ./examples.
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: mca-backend
     environment:
       APP_ENV: development
@@ -36,13 +53,18 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     healthcheck:
       test:
-        ["CMD", "python", "-c",
-         "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/api/health').status==200 else 1)"]
+        - CMD
+        - curl
+        - -fsS
+        - http://localhost:8000/api/health
       interval: 15s
       timeout: 5s
       retries: 5
+      start_period: 20s
 
   frontend:
     build:
@@ -54,7 +76,8 @@ services:
     ports:
       - "3000:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
 
 volumes:
   postgres_data:

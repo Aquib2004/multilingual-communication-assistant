@@ -13,6 +13,7 @@ from app.core.languages import get_language
 from app.models.message import Message, MessageState, RiskLevel
 from app.schemas.message import (
     ApproveRequest,
+    ChangeSummary,
     MessageCreateRequest,
     MessageListResponse,
     MessageResponse,
@@ -252,8 +253,11 @@ async def rewrite_message(
     return RewriteResponse(
         message_id=message.id if message else None,
         rewritten_message=output.rewritten_message,
-        changes=output.changes,
-        open_questions=output.open_questions,
+        # Convert the AI-layer models to the API models explicitly. Passing
+        # RewriteChanges straight through fails because the response model
+        # forbids extra keys and expects its own ChangeSummary type.
+        changes=[ChangeSummary(**change.model_dump()) for change in output.changes],
+        open_questions=list(output.open_questions),
         reading_level=output.reading_level,
         pii_warnings=findings,
         provider=provider,

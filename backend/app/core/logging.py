@@ -55,7 +55,11 @@ def configure_logging(settings: Settings) -> None:
         wrapper_class=structlog.make_filtering_bound_logger(
             getattr(logging, settings.log_level.upper(), logging.INFO)
         ),
-        logger_factory=structlog.PrintLoggerFactory(),
+        # The stdlib factory is required because `add_logger_name` reads
+        # `logger.name`. PrintLoggerFactory returns a PrintLogger without that
+        # attribute, which makes the add_logger_name processor raise and would
+        # break the exception handlers themselves.
+        logger_factory=structlog.stdlib.LoggerFactory(),
         cache_logger_on_first_use=True,
     )
 

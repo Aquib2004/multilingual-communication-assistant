@@ -1,0 +1,11 @@
+node_modules
+dist
+coverage
+.vite
+*.local
+npm-debug.log*
+yarn-error.log*
+.env
+.env.*
+!.env.example
+.DS_Store

@@ -78,12 +78,25 @@ async def session(engine: Any) -> AsyncIterator[AsyncSession]:
 async def client(settings: Settings) -> AsyncIterator[AsyncClient]:
     """An HTTP client bound to the ASGI app, using the test database.
 
-    The app builds its engine from settings, so the module-level engine cache is
-    reset before and after each test to keep isolation.
+    Two details matter here:
+
+    1. ``ASGITransport`` does not run the application lifespan, so the schema is
+       created explicitly here rather than relying on ``create_all()`` inside
+       ``lifespan``. Without this every DB-backed test fails with an
+       OperationalError for a missing table.
+    2. The app builds its engine from settings, so the module-level engine cache
+       is reset before and after each test to keep isolation.
     """
+    import app.db.database as database_module
     from app.main import create_app
 
     await _reset_database_module()
+
+    # Point the module-level factory at the test database, then create the schema.
+    database_module._engine = create_async_engine(settings.database_url, future=True)
+    async with database_module._engine.begin() as connection:
+        await connection.run_sync(Base.metadata.create_all)
+
     app = create_app(settings)
     transport = ASGITransport(app=app)
 

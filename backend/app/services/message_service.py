@@ -30,6 +30,21 @@ from app.verification.fact_extractor import ExtractedItem, extract_protected_ite
 
 logger = get_logger(__name__)
 
+#: States that mean "a human approved this source".
+#:
+#: Approval is sticky. A message that has already been translated or verified
+#: remains approved, so later stages can still run against the frozen text.
+#: Without this, translating a message would move it to ``translated`` and then
+#: block any further translation or verification of it.
+APPROVED_OR_LATER_STATES: frozenset[MessageState] = frozenset(
+    {
+        MessageState.APPROVED,
+        MessageState.TRANSLATED,
+        MessageState.VERIFIED,
+        MessageState.ESCALATED,
+    }
+)
+
 
 class MessageService:
     """Create, revise, approve, and inspect communication workspaces."""
@@ -175,6 +190,12 @@ class MessageService:
 
         This is the single guard that makes the approval gate real.
 
+        Approval is **sticky**: once a human approves a source it stays
+        approved, so later stages may still run against the frozen text.
+        Without this, translating a message would move it to ``translated`` and
+        then block any further work on it - for example adding a third language
+        or verifying a second one.
+
         Args:
             message: The workspace to check.
 
@@ -184,9 +205,9 @@ class MessageService:
         Raises:
             SourceNotApprovedError: If the message has not been approved.
         """
-        if message.state is not MessageState.APPROVED or not message.approved_message:
-            raise SourceNotApprovedError
-        return message.approved_message
+        if message.state in APPROVED_OR_LATER_STATES and message.approved_message:
+            return message.approved_message
+        raise SourceNotApprovedError
 
     async def create(
         self,

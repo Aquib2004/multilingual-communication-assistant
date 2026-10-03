@@ -5,7 +5,7 @@ from __future__ import annotations
 from enum import StrEnum
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Boolean, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, Enum, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
@@ -70,7 +70,13 @@ class ProtectedItem(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     message_id: Mapped[str] = mapped_column(
         String(36), ForeignKey("messages.id", ondelete="CASCADE"), nullable=False, index=True
     )
-    item_type: Mapped[ProtectedItemType] = mapped_column(String(24), nullable=False, index=True)
+    # Must be a real Enum column, not String. With String, SQLAlchemy returns a
+    # plain str after a database round-trip and every `row.item_type.value`
+    # access fails. This only shows up once an object has been reloaded, which is
+    # why it must be pinned by a test that reads back from the database.
+    item_type: Mapped[ProtectedItemType] = mapped_column(
+        Enum(ProtectedItemType, native_enum=False, length=24), nullable=False, index=True
+    )
     value: Mapped[str] = mapped_column(Text, nullable=False)
     placeholder: Mapped[str] = mapped_column(String(16), nullable=False)
     must_match_exactly: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)

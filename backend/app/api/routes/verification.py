@@ -17,6 +17,7 @@ from app.models.translation import Translation
 from app.schemas.verification import (
     EscalationRequest,
     EscalationResponse,
+    RiskEvidenceResponse,
     VerificationReportResponse,
     VerificationRequest,
 )
@@ -81,7 +82,8 @@ async def check_escalation(payload: EscalationRequest) -> EscalationResponse:
     return EscalationResponse(
         level=assessment.level.value,
         declared_by_user=assessment.declared_by_user,
-        evidence=assessment.evidence,
+        # RiskEvidence is a dataclass; convert it rather than passing it through.
+        evidence=[RiskEvidenceResponse(**item.to_dict()) for item in assessment.evidence],
         escalation_note=assessment.escalation_note,
         review_requirements=assessment.review_requirements,
         ai_output_is_final=False,
