@@ -264,6 +264,17 @@ dataclasses passed into Pydantic response models. Keep running it.
 | Frontend ↔ backend | `python e2e_live.py` | **18/18 checks passed** |
 | Alembic (SQLite) | `upgrade → downgrade → upgrade` | **succeeds** |
 | Compose config | `docker compose config --quiet` | **valid** |
+| GitHub Actions (Backend) | `pytest`, `ruff`, `black`, `mypy --strict` | **passing** |
+| GitHub Actions (Frontend) | `lint`, `prettier`, `tsc --noEmit`, `build`, `vitest` | **passing** |
+| GitHub Actions (Tests) | secret scan, artefact scan, integrity | **passing** |
+
+All three workflows run on every push to `main` and are currently green.
+
+> A note on why CI is worth trusting here: the first CI run **failed** even
+> though `npm run typecheck` passed locally. The cause was a stray global
+> `~/node_modules/@types/node` that TypeScript picked up by searching parent
+> directories, masking a genuinely missing dependency. CI caught what local
+> runs could not. Treat a green local check as necessary but not sufficient.
 
 **Not yet verified.** `docker compose build` / `up` and the PostgreSQL test
 matrix have **not** been run: the Dockerfiles and compose file are written and
