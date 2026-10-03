@@ -30,7 +30,11 @@
     "noImplicitOverride": true,
     "exactOptionalPropertyTypes": false,
 
-    "types": ["vitest/globals", "@testing-library/jest-dom"],
+    /* "node" is required for vite.config.ts (node:path, __dirname, process).
+       Omitting it makes the build depend on a globally-installed @types/node,
+       which exists on some machines and not others - it built locally on the
+       original author's machine and failed immediately in CI. */
+    "types": ["node", "vitest/globals", "@testing-library/jest-dom"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
