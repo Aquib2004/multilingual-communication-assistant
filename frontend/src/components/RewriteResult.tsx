@@ -95,7 +95,10 @@ export function RewriteResult({
           </h3>
           <ul className="mt-2 space-y-3" data-testid="change-summary">
             {rewrite.changes.map((change, index) => (
-              <li key={`${index}-${change.original}`} className="rounded-lg bg-slate-50 p-3 text-sm">
+              <li
+                key={`${index}-${change.original}`}
+                className="rounded-lg bg-slate-50 p-3 text-sm"
+              >
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="rounded bg-red-100 px-1.5 py-0.5 text-red-800 line-through">
                     {change.original}

@@ -74,9 +74,7 @@ describe('LanguageSelector', () => {
   it('warns when fewer than the minimum number of languages is chosen', async () => {
     render(<LanguageSelector selected={['es']} onChange={vi.fn()} minLanguages={2} />);
 
-    expect(
-      await screen.findByText(/Select at least 2 target languages/),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/Select at least 2 target languages/)).toBeInTheDocument();
   });
 
   it('does not warn once the minimum is met', async () => {

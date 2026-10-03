@@ -32,10 +32,10 @@ export function Workspace() {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <header>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Communication workspace</h1>
-        <p className="mt-1 text-sm text-slate-600">
-          {RISK_DESCRIPTIONS[riskLevel]}
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          Communication workspace
+        </h1>
+        <p className="mt-1 text-sm text-slate-600">{RISK_DESCRIPTIONS[riskLevel]}</p>
         <div className="mt-2">
           <RiskBadge level={riskLevel} />
         </div>

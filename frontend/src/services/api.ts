@@ -162,7 +162,8 @@ export const api = {
   rejectMessage: (id: string, notes: string) =>
     request<Message>(`/messages/${id}/reject`, { method: 'POST', body: { notes } }),
 
-  getProtectedItems: (id: string) => request<Message['protected_items']>(`/messages/${id}/protected-items`),
+  getProtectedItems: (id: string) =>
+    request<Message['protected_items']>(`/messages/${id}/protected-items`),
 
   deleteMessage: (id: string) => request<void>(`/messages/${id}`, { method: 'DELETE' }),
 
@@ -193,4 +194,3 @@ export const api = {
 };
 
 export { BASE_URL };
-

@@ -52,9 +52,7 @@ export default function App() {
                     end={item.end}
                     className={({ isActive }) =>
                       `rounded-lg px-3 py-2 text-sm font-medium ${
-                        isActive
-                          ? 'bg-blue-50 text-blue-800'
-                          : 'text-slate-700 hover:bg-slate-100'
+                        isActive ? 'bg-blue-50 text-blue-800' : 'text-slate-700 hover:bg-slate-100'
                       }`
                     }
                   >
@@ -89,8 +87,8 @@ export default function App() {
       <footer className="border-t border-slate-200 bg-white">
         <div className="mx-auto max-w-5xl px-4 py-6 text-xs text-slate-500">
           <p>
-            This tool never certifies a translation. High-consequence content (safety, health,
-            legal rights, discipline, disability services, emergencies) must go through your
+            This tool never certifies a translation. High-consequence content (safety, health, legal
+            rights, discipline, disability services, emergencies) must go through your
             organisation&rsquo;s approved professional translation or interpretation process.
           </p>
           <p className="mt-2">

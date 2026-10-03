@@ -33,9 +33,7 @@ export function ProtectedItems({ items }: ProtectedItemsProps) {
         Each value below is held still during translation and checked afterwards.
       </p>
 
-      {exact.length > 0 ? (
-        <GroupedItems title="Reproduced exactly" items={exact} />
-      ) : null}
+      {exact.length > 0 ? <GroupedItems title="Reproduced exactly" items={exact} /> : null}
       {semantic.length > 0 ? (
         <GroupedItems title="Meaning checked, wording may change" items={semantic} />
       ) : null}

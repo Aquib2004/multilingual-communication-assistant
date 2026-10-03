@@ -60,9 +60,9 @@ describe('api client', () => {
       ),
     );
 
-    await expect(api.createTranslations({ message_id: 'm1', target_languages: ['es'] })).rejects.toThrow(
-      ApiError,
-    );
+    await expect(
+      api.createTranslations({ message_id: 'm1', target_languages: ['es'] }),
+    ).rejects.toThrow(ApiError);
 
     try {
       await api.createTranslations({ message_id: 'm1', target_languages: ['es'] });

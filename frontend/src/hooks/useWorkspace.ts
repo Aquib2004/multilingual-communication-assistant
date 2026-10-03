@@ -9,13 +9,7 @@
 import { useCallback, useMemo, useState } from 'react';
 
 import { ApiError, api } from '@/services/api';
-import type {
-  Message,
-  RewriteResponse,
-  RiskLevel,
-  Translation,
-  VerificationReport,
-} from '@/types';
+import type { Message, RewriteResponse, RiskLevel, Translation, VerificationReport } from '@/types';
 
 export interface WorkspaceDraft {
   sourceMessage: string;
@@ -44,12 +38,7 @@ export const EMPTY_DRAFT: WorkspaceDraft = {
 };
 
 export type WorkspaceStep =
-  | 'idle'
-  | 'rewriting'
-  | 'approving'
-  | 'translating'
-  | 'verifying'
-  | 'error';
+  'idle' | 'rewriting' | 'approving' | 'translating' | 'verifying' | 'error';
 
 export interface WorkspaceState {
   draft: WorkspaceDraft;
@@ -101,10 +90,8 @@ export function useWorkspace(): WorkspaceState {
     message?.state === 'verified' ||
     message?.state === 'escalated';
 
-  const canTranslate =
-    Boolean(message?.id) && isApproved && draft.targetLanguages.length >= 2;
+  const canTranslate = Boolean(message?.id) && isApproved && draft.targetLanguages.length >= 2;
   const canVerify = translations.length > 0;
-
 
   /**
    * Rewrite, creating the workspace on the first call.
@@ -256,10 +243,24 @@ export function useWorkspace(): WorkspaceState {
       reset,
     }),
     [
-      draft, setDraft, step, error, clearError, message, rewrite, translations,
-      report, isApproved, canTranslate, canVerify, runRewrite, approve, reject,
-      translate, verify, reset,
+      draft,
+      setDraft,
+      step,
+      error,
+      clearError,
+      message,
+      rewrite,
+      translations,
+      report,
+      isApproved,
+      canTranslate,
+      canVerify,
+      runRewrite,
+      approve,
+      reject,
+      translate,
+      verify,
+      reset,
     ],
   );
 }
-

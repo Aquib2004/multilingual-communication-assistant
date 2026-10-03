@@ -79,8 +79,7 @@ export function History() {
                     statusStyle(message.state === 'escalated' ? 'ESCALATED' : 'PASS').textClass
                   }`}
                 >
-                  Step{' '}
-                  {currentStage(message.state, message.translations.length) + 1} of 7
+                  Step {currentStage(message.state, message.translations.length) + 1} of 7
                 </span>
                 {message.translations.length > 0 ? (
                   <span className="text-xs text-slate-500">

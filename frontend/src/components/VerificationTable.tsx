@@ -23,9 +23,7 @@ export function VerificationTable({ report }: VerificationTableProps) {
   }
 
   const order: Record<string, number> = { FAIL: 0, WARNING: 1, REVIEW: 2, PASS: 3 };
-  const checks = [...report.checks].sort(
-    (a, b) => (order[a.status] ?? 9) - (order[b.status] ?? 9),
-  );
+  const checks = [...report.checks].sort((a, b) => (order[a.status] ?? 9) - (order[b.status] ?? 9));
 
   return (
     <div className="space-y-5" data-testid="verification-table">
@@ -184,4 +182,3 @@ function Stat({ label, value }: { label: string; value: number }) {
     </div>
   );
 }
-

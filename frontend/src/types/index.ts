@@ -9,12 +9,7 @@
 export type RiskLevel = 'routine' | 'moderate' | 'high';
 
 export type MessageState =
-  | 'draft'
-  | 'revised'
-  | 'approved'
-  | 'translated'
-  | 'verified'
-  | 'escalated';
+  'draft' | 'revised' | 'approved' | 'translated' | 'verified' | 'escalated';
 
 export type VerificationStatus = 'PASS' | 'WARNING' | 'FAIL' | 'REVIEW' | 'ESCALATED';
 

@@ -95,8 +95,7 @@ export function EscalationNotice({ level, note, requirements = [] }: EscalationN
           ) : null}
           {isHigh ? (
             <p className="mt-2 text-sm font-medium">
-              This tool never certifies a translation. Do not send AI output alone for this
-              content.
+              This tool never certifies a translation. Do not send AI output alone for this content.
             </p>
           ) : null}
         </div>

@@ -50,8 +50,8 @@ export function MessageEditor({
         data-testid="privacy-warning"
         className="mt-2 rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-900 ring-1 ring-inset ring-amber-600/20"
       >
-        Do not enter real student or family names, phone numbers, email addresses, or student
-        IDs. This tool is for fictional or de-identified content.
+        Do not enter real student or family names, phone numbers, email addresses, or student IDs.
+        This tool is for fictional or de-identified content.
       </p>
     </div>
   );

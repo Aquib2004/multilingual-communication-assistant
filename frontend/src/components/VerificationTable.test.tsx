@@ -98,9 +98,7 @@ describe('VerificationTable', () => {
 
   it('always states that a human must confirm before sending', () => {
     render(<VerificationTable report={REPORT} />);
-    expect(
-      screen.getByText(/A fluent reviewer must confirm this translation/),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/A fluent reviewer must confirm this translation/)).toBeInTheDocument();
   });
 
   it('shows the escalation notice for high-risk content', () => {
